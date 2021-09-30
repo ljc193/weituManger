@@ -102,6 +102,7 @@ export default {
                             if(res.code == 1) { // 登录成功
                                 let token = res.data;
                                 this.$setByKey("token",token);
+                                this.$setByKey("userName",this.form.name);
                                 this.$message.success("登录成功！")
                                 this.$router.push('/home')
                             }
