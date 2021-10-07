@@ -28,7 +28,7 @@
 <script>
 import tableOperation from "@/components/tableOperation"
 import appTable from "@/components/appTable"
-import addType from "./components/add-type.vue"
+import addType from "../components/add-type.vue"
 import { mapActions } from "vuex" 
 export default {
     components: {
@@ -43,10 +43,8 @@ export default {
             tableHeader: [
                 { type: "selection", width: 50, fixed: true },
                 { prop: "sort", label: "排序", width: 50 },
-                { prop: "title", label: "项目名", width: 120 },
-                { prop: "imgAddress", label: "图片", width: 120 },
-                { prop: "address", label: "地点", width: 120 },
-                { prop: "date", label: "时间", width: 120 },
+                { prop: "name", label: "类别中文名称", width: 120 },
+                { prop: "englishName", label: "类别英文名称", width: 120 },
                 { prop: "action", label: "操作", width: 120,
                     arr:[
                         {name:"修改",type:"edit",id:1},
@@ -69,16 +67,16 @@ export default {
         this.getTypeList();
     },
     methods: {
-        ...mapActions("home",["getList","deleteRow"]),
+        ...mapActions("project",["getType","deleteType"]),
         // 删除表格数据
         handleRowDelete(row) {
-             this.$confirm(`是否删除${row.title}？`, '提示', {
+             this.$confirm(`是否删除${row.name}？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 this.tableSettings.isLoading = true;
-                this.deleteRow({id:row.id})
+                this.deleteType({id:row.id})
                 .then(
                     res=>{
                         if(res.code == 1) {
@@ -99,28 +97,16 @@ export default {
         // 获取表格
         getTypeList() {
             this.tableSettings.isLoading = true;
-            this.getList()
+            this.getType()
             .then(
                 res=>{
                     this.tableSettings.isLoading = false;
                     if(res.code == 1) {
-                        let data = res.data.list.map(i=>{
-                            return {
-                                ...this.analysisData(i).hdescribe,
-                                ...i
-                            }
-                        })
-                        this.tableData = data;
+                        this.tableData = res.data.list;
                         this.tableSettings.total = Number(res.data.total)?Number(res.data.total):0;
                     }
                 }
             )
-        },
-        // 解析表格数据
-        analysisData(item) {
-            let data = JSON.parse(JSON.stringify(item));
-            data.hdescribe = JSON.parse(data.hdescribe.replace(/&quot;/g,"\""));
-            return data;
         },
         /*
         * 表格操作

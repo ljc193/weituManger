@@ -5,18 +5,18 @@
             <h3 class = "login-content-title">纬图后台管理系统</h3>
             <el-form ref="login_form" :model="form" :rules="rules">
                 <el-form-item prop="name">
-                    <el-input v-model="form.name" placeholder="请输入用户名">
+                    <el-input v-model="form.name" placeholder="请输入用户名" @keyup.enter.native = "handleLogin">
                         <i slot="prefix" class="el-input__icon el-icon-s-custom"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input v-model="form.password" placeholder="请输入用户密码" type = "password">
+                    <el-input v-model="form.password" placeholder="请输入用户密码" type = "password" @keyup.enter.native = "handleLogin">
                         <i slot="prefix" class="el-input__icon el-icon-lock"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item>
                     <div class = "login-codeWrapper">
-                        <el-input v-model="form.code" placeholder="验证码">
+                        <el-input v-model="form.code" placeholder="验证码" @keyup.enter.native = "handleLogin">
                             <i slot="prefix" class="el-input__icon el-icon-key"></i>
                         </el-input>
                         <span class = "login-code" @click = "getCode" >{{ loginCode }}</span>

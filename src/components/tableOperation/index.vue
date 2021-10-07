@@ -2,7 +2,7 @@
     <div class = "operation-header">
             <div class = "operation-header-left">
                 <el-input 
-                    placeholder = "请输入搜索标题/地点/时间" 
+                    placeholder = "请输入搜索内容" 
                     v-model="form.keyword" 
                     size = "mini"
                     style="width:280px"
@@ -35,19 +35,12 @@
                     @click="handleAdd"
                 >新增</el-button>
                 <el-button
-                    type="success"
-                    icon="el-icon-edit"
-                    size="mini"
-                    :disabled="single"
-                    @click="handleUpdate"
-                >修改</el-button>
-                <el-button
                     type="danger"
                     icon="el-icon-delete"
                     size="mini"
                     :disabled="multiple"
                     @click="handleDelete"
-                >删除</el-button>
+                >批量删除</el-button>
             </div>
         </div>
 </template> 
@@ -64,13 +57,10 @@ export default {
     },
     methods: {
         handleDelete() {
-
-        },
-        handleUpdate() {
-
+            this.$emit("operation","3")
         },
         handleAdd() {
-
+            this.$emit("operation","1")
         },
         resetQuery() {
             this.$emit("search","")

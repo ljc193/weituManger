@@ -31,13 +31,18 @@
         >
           <template slot-scope="scope">
             <template v-if="item.arr">
-              <el-button
-                size="mini"
-                :type="item2.type=='delete'?'danger':'primary'"
+              <span
                 v-for="item2 in item.arr"
-                :key="item2.type"
-                @click="handleClick(item2.type, scope.row,scope.$index)"
-              >{{item2.name}}</el-button>
+                :key="item2.id"
+                @click="handleClick(item2.type,scope.row)"
+                :style = "{ 
+                  color: item2.type=='delete'?'red':item2.type=='edit'?'#409EFF':'#67C23A',
+                  cursor: 'pointer',
+                  marginRight:'5px'
+                }"
+              >
+                {{ item2.name }}
+              </span>
             </template>
           </template>
         </el-table-column>
@@ -134,11 +139,21 @@ export default {
   },
   methods: {
     handleClick(type, e, i) {
-      this.$emit("select", e);
+      this.$emit(type, e);
     }
   }
 };
 </script>
 
-<style lang="" scoped>
+<style lang="less" scoped>
+  /deep/.el-table {
+    th,td {
+      padding: 6px 0;
+    }
+    .el-table__header {
+      th {
+        background: #f0f2f7e3;
+      }
+    }
+  }
 </style>

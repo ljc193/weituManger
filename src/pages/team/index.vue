@@ -43,10 +43,10 @@ export default {
             tableHeader: [
                 { type: "selection", width: 50, fixed: true },
                 { prop: "sort", label: "排序", width: 50 },
-                { prop: "title", label: "项目名", width: 120 },
-                { prop: "imgAddress", label: "图片", width: 120 },
-                { prop: "address", label: "地点", width: 120 },
-                { prop: "date", label: "时间", width: 120 },
+                { prop: "name", label: "人物名称", width: 120 },
+                { prop: "imgAddress", label: "人物头像", width: 120 },
+                { prop: "position", label: "职位", width: 120 },
+                { prop: "characterDescription", label: "描述", width: 120 },
                 { prop: "action", label: "操作", width: 120,
                     arr:[
                         {name:"修改",type:"edit",id:1},
@@ -69,7 +69,7 @@ export default {
         this.getTypeList();
     },
     methods: {
-        ...mapActions("home",["getList","deleteRow"]),
+        ...mapActions("team",["getList","deleteRow"]),
         // 删除表格数据
         handleRowDelete(row) {
              this.$confirm(`是否删除${row.title}？`, '提示', {
@@ -104,12 +104,7 @@ export default {
                 res=>{
                     this.tableSettings.isLoading = false;
                     if(res.code == 1) {
-                        let data = res.data.list.map(i=>{
-                            return {
-                                ...this.analysisData(i).hdescribe,
-                                ...i
-                            }
-                        })
+                        let data = res.data.list;
                         this.tableData = data;
                         this.tableSettings.total = Number(res.data.total)?Number(res.data.total):0;
                     }
@@ -119,7 +114,7 @@ export default {
         // 解析表格数据
         analysisData(item) {
             let data = JSON.parse(JSON.stringify(item));
-            data.hdescribe = JSON.parse(data.hdescribe.replace(/&quot;/g,"\""));
+            data.content = JSON.parse(data.content.replace(/&quot;/g,"\""));
             return data;
         },
         /*
