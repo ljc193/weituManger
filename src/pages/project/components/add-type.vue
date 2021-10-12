@@ -94,6 +94,9 @@ export default {
             if(this.isEdit) return;
             this.$nextTick(()=>{
                 this.$refs[formName].resetFields();
+                for(var i in this.ruleForm) {
+                    this.ruleForm[i] = "";
+                }
             })
         }
     }

@@ -97,6 +97,7 @@ export default {
         },
         // 图片上传变化
         handleImgChange(list) {
+            console.log(list)
             this.ruleForm.imgAddress = list.toString();
         },
         // 保存请求
@@ -128,7 +129,10 @@ export default {
             if(this.isEdit) return;
             this.$nextTick(()=>{
                 this.$refs[formName].resetFields();
-                this.$refs.app_upload.backImgList = []
+                this.$refs.app_upload.backImgList = [];
+                for(var i in this.ruleForm) {
+                    this.ruleForm[i] = "";
+                }
             })
         }
     }

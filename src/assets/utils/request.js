@@ -3,12 +3,20 @@ import axios from 'axios'
 import qs from 'qs'
 import { Notification, Message } from 'element-ui'
 import {baseUrl } from "./config";
+
+let baseUrls = ""
+if (process.env.NODE_ENV === "development") {
+	baseUrls = "/api/"
+}else {
+	baseUrls = baseUrl
+}
+
 // 创建axios实例
 const request = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
-  baseURL: "/api/",
+  baseURL: baseUrls,
   // 超时
-  timeout: 30000
+  timeout: 30000 
 })
 // request拦截器
 request.interceptors.request.use(

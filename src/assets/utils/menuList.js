@@ -5,17 +5,17 @@ let menuList = [
 		"url": 'home/index',
 		"children": []
     },
-    {
-        "path": "/baseMsg_wrapper",
-		"title": "基础信息",
-		"children": [
-		    {
-				"path": "/baseMsg",
-				"title": "导航显示",
-				"url": 'baseMsg/index'
-		    },
-		]
-    },
+    // {
+    //     "path": "/baseMsg_wrapper",
+	// 	"title": "基础信息",
+	// 	"children": [
+	// 	    {
+	// 			"path": "/baseMsg",
+	// 			"title": "导航显示",
+	// 			"url": 'baseMsg/index'
+	// 	    },
+	// 	]
+    // },
 	{
         "path": "/project",
 		"title": "项目配置",
@@ -41,6 +41,27 @@ let menuList = [
 		"path": "/team",
 		"title": "团队管理",
 		"url": 'team/index',
+		"children": []
+    },
+	{
+        "path": "/contact",
+		"title": "联系我们",
+		"children": [
+		    {
+				"path": "/contactBaseInfo",
+				"title": "页面设置",
+				"url": 'contact/contactBaseInfo/index'
+		    },{
+				"path": "/positionManagement",
+				"title": "职位管理",
+				"url": 'contact/position/index'
+		    }
+		]
+    },
+	{
+		"path": "/about",
+		"title": "关于我们",
+		"url": 'about/index',
 		"children": []
     },
 	

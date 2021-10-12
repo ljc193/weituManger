@@ -7,6 +7,7 @@ import project from "./modules/project"
 import home from "./modules/home"
 import news from "./modules/news"
 import team from "./modules/team"
+import contcat from "./modules/contcat"
 
 Vue.use(Vuex);
 let modules = {
@@ -14,7 +15,9 @@ let modules = {
     navigation,
     project,
     home,
+    news,
     team,
+    contcat,
 };
 const store = new Vuex.Store({
     modules,

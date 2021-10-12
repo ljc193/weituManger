@@ -12,6 +12,8 @@
                 :settings="tableSettings" 
                 @delete = "handleRowDelete"
                 @edit = "handleEdit"
+                @pageSize = "handlePageSize"
+                @currentPage = "handleCurrentPage"
             >
             </app-table>
         </div>
@@ -60,6 +62,10 @@ export default {
                 total: 0,
                 height:null
             },
+            tablePage: {
+                pageNo:1,
+                pageSize: 20,
+            },
             addDialog: false,
         }
     },
@@ -68,6 +74,14 @@ export default {
     },
     methods: {
         ...mapActions("project",["getType","deleteType"]),
+        handlePageSize(pageSize) {
+            this.tablePage.pageSize = pageSize;
+            this.getTypeList();
+        },
+        handleCurrentPage(pageNo) {
+            this.tablePage.pageNo = pageNo;
+            this.getTypeList();
+        },
         // 删除表格数据
         handleRowDelete(row) {
              this.$confirm(`是否删除${row.name}？`, '提示', {
@@ -97,7 +111,7 @@ export default {
         // 获取表格
         getTypeList() {
             this.tableSettings.isLoading = true;
-            this.getType()
+            this.getType(this.tablePage)
             .then(
                 res=>{
                     this.tableSettings.isLoading = false;

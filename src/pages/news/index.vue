@@ -12,7 +12,22 @@
                 :settings="tableSettings" 
                 @delete = "handleRowDelete"
                 @edit = "handleEdit"
+                @pageSize = "handlePageSize"
+                @currentPage = "handleCurrentPage"
             >
+                <template v-slot:cover="{row}">
+                    <el-image 
+                        style="width: 50px; height: 50px"
+                        :src="imgShow + row.cover" 
+                        :preview-src-list="[imgShow + row.cover]">
+                    </el-image>
+                </template>
+                <template v-slot:issue="{row}">
+                    <span>{{ row.issue?"是":"否" }}</span>
+                </template>
+                <template v-slot:issueTime="{row}">
+                    <span>{{ new Date(row.issueTime).format("yyyy-MM-dd") }}</span>
+                </template>
             </app-table>
         </div>
         <!-- 新增 && 修改 -->
@@ -30,6 +45,7 @@ import tableOperation from "@/components/tableOperation"
 import appTable from "@/components/appTable"
 import addType from "./components/add-type.vue"
 import { mapActions } from "vuex" 
+import { imgShow } from "@/assets/utils/config"
 export default {
     components: {
         tableOperation,
@@ -39,14 +55,15 @@ export default {
     data() {
         return {
             tableData: [],
+            imgShow,
             isEdit: false,
             tableHeader: [
                 { type: "selection", width: 50, fixed: true },
                 { prop: "sort", label: "排序", width: 50 },
                 { prop: "title", label: "新闻名称", width: 120 },
-                { prop: "cover", label: "新闻背景", width: 120 },
-                { prop: "issue", label: "是否发布", width: 120 },
-                { prop: "issueTime", label: "发布时间", width: 120 },
+                { prop: "cover", label: "新闻背景", width: 120,type:'slot' },
+                { prop: "issue", label: "是否发布", width: 120,type:'slot' },
+                { prop: "issueTime", label: "新闻时间", width: 120,type:'slot' },
                 { prop: "action", label: "操作", width: 120,
                     arr:[
                         {name:"修改",type:"edit",id:1},
@@ -54,6 +71,10 @@ export default {
                     ] 
                 },
             ],
+             tablePage: {
+                pageNo:1,
+                pageSize: 20,
+            },
             tableSettings: {
                 isLoading: false,
                 isPagination: true,
@@ -70,6 +91,14 @@ export default {
     },
     methods: {
         ...mapActions("news",["getList","deleteRow"]),
+         handlePageSize(pageSize) {
+            this.tablePage.pageSize = pageSize;
+            this.getTypeList();
+        },
+        handleCurrentPage(pageNo) {
+            this.tablePage.pageNo = pageNo;
+            this.getTypeList();
+        },
         // 删除表格数据
         handleRowDelete(row) {
              this.$confirm(`是否删除${row.title}？`, '提示', {
@@ -99,14 +128,15 @@ export default {
         // 获取表格
         getTypeList() {
             this.tableSettings.isLoading = true;
-            this.getList()
+            this.getList(this.tablePage)
             .then(
                 res=>{
                     this.tableSettings.isLoading = false;
                     if(res.code == 1) {
                         let data = res.data.list.map(i=>{
+                            i.issueTime = new Date(i.issueTime);
                             return {
-                                ...this.analysisData(i).hdescribe,
+                                ...this.analysisData(i).content,
                                 ...i
                             }
                         })

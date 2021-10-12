@@ -10,7 +10,7 @@
             <div class='app_layout-main-nav'>
                 <app-nav></app-nav>
             </div>
-            <div class='app__layout-main-content'>
+            <div class='app_layout-main-content'>
                 <router-view/>
             </div>
         </div>
@@ -35,9 +35,14 @@ export default {
 </script>
 <style lang="less" scoped>
     .app_layout {
+        height: 100%;
         &-main {
             margin-left: 200px;
-            min-height: 100%;
+            height: 100%;
+            &-content {
+                overflow: auto;
+                height: calc(100% - 81px);
+            }
         }
         &-menu {
             position: fixed;

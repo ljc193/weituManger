@@ -13,7 +13,19 @@
                 @delete = "handleRowDelete"
                 @edit = "handleEdit"
                 @detail = "handleDetail"
+                @pageSize = "handlePageSize"
+                @currentPage = "handleCurrentPage"
             >
+                <template v-slot:itemCategoryId="{row}">
+                    <span>{{ formartData(row) }}</span>
+                </template>
+                <template v-slot:cover="{row}">
+                    <el-image 
+                        style="width: 50px; height: 50px"
+                        :src="imgShow + row.cover" 
+                        :preview-src-list="[imgShow + row.cover]">
+                    </el-image>
+                </template>
             </app-table>
         </div>
         <!-- 新增 && 修改 -->
@@ -38,6 +50,7 @@ import appTable from "@/components/appTable"
 import addItem from "../components/add-item.vue"
 import addItemDetail from "../components/add-item-detail.vue"
 import { mapActions } from "vuex" 
+import { imgShow } from "@/assets/utils/config"
 export default {
     components: {
         tableOperation,
@@ -48,6 +61,7 @@ export default {
     data() {
         return {
             tableData: [],
+            imgShow,
             isEdit: false,
             detailDialog: false,
             tableHeader: [
@@ -55,9 +69,9 @@ export default {
                 { prop: "sort", label: "排序", width: 50 },
                 { prop: "name", label: "项目名称", width: 120 },
                 { prop: "content", label: "项目内容", width: 120 },
-                { prop: "itemCategoryId", label: "项目所属", width: 120 },
-                { prop: "type", label: "项目类型", width: 120 },
-                { prop: "cover", label: "项目封面", width: 120 },
+                { prop: "itemCategoryId", label: "项目所属", width: 120,type:"slot" },
+                // { prop: "type", label: "项目类型", width: 120 },
+                { prop: "cover", label: "项目封面", width: 120,type:"slot" },
                 { prop: "action", label: "操作", width: 120,
                     arr:[
                         {name:"详情",type:"detail",id:3},
@@ -66,6 +80,10 @@ export default {
                     ] 
                 },
             ],
+            tablePage: {
+                pageNo:1,
+                pageSize: 20,
+            },
             tableSettings: {
                 isLoading: false,
                 isPagination: true,
@@ -75,13 +93,43 @@ export default {
                 height:null
             },
             addDialog: false,
+            typeList:[],
         }
     },
     created () {
         this.getItemList();
+        this.getTypeArr();
     },
     methods: {
-        ...mapActions("project",["deleteItem","getItem"]),
+        ...mapActions("project",["deleteItem","getItem","getType"]),
+        handlePageSize(pageSize) {
+            this.tablePage.pageSize = pageSize;
+            this.getItemList();
+        },
+        handleCurrentPage(pageNo) {
+            this.tablePage.pageNo = pageNo;
+            this.getItemList();
+        },
+        //格式化项目所属
+        formartData(row) {
+            let text = "",item = this.typeList.find(i=>i.id == row.itemCategoryId);
+            text = item?item.name:"未知类型"
+            return text;
+        },
+        // 获取项目类型
+        getTypeArr() {
+            this.getType({
+                pageNo:1,
+                pageSize: 2000,
+            })
+            .then(
+                res=>{
+                    if(res.code == 1) {
+                        this.typeList = res.data.list;
+                    }
+                }
+            )
+        },
         // 删除表格数据
         handleRowDelete(row) {
              this.$confirm(`是否删除${row.name}？`, '提示', {
@@ -116,7 +164,7 @@ export default {
         // 获取表格
         getItemList() {
             this.tableSettings.isLoading = true;
-            this.getItem()
+            this.getItem(this.tablePage)
             .then(
                 res=>{
                     this.tableSettings.isLoading = false;
@@ -133,8 +181,8 @@ export default {
         */
         handleOperation(type) {
             if(type == 1) {
-                this.addDialog = true;
                 this.isEdit = false;
+                this.addDialog = true;
             }else if(type == 2) {
 
             }

@@ -12,7 +12,16 @@
                 :settings="tableSettings" 
                 @delete = "handleRowDelete"
                 @edit = "handleEdit"
+                @pageSize = "handlePageSize"
+                @currentPage = "handleCurrentPage"
             >
+                <template v-slot:imgAddress="{row}">
+                    <el-image 
+                        style="width: 50px; height: 50px"
+                        :src="imgShow + row.imgAddress" 
+                        :preview-src-list="[imgShow + row.imgAddress]">
+                    </el-image>
+                </template>
             </app-table>
         </div>
         <!-- 新增 && 修改 -->
@@ -30,6 +39,7 @@ import tableOperation from "@/components/tableOperation"
 import appTable from "@/components/appTable"
 import addType from "./components/add-type.vue"
 import { mapActions } from "vuex" 
+import { imgShow } from "@/assets/utils/config"
 export default {
     components: {
         tableOperation,
@@ -39,14 +49,15 @@ export default {
     data() {
         return {
             tableData: [],
+            imgShow,
             isEdit: false,
             tableHeader: [
                 { type: "selection", width: 50, fixed: true },
                 { prop: "sort", label: "排序", width: 50 },
                 { prop: "name", label: "人物名称", width: 120 },
-                { prop: "imgAddress", label: "人物头像", width: 120 },
+                { prop: "imgAddress", label: "人物头像", width: 120,type :"slot" },
                 { prop: "position", label: "职位", width: 120 },
-                { prop: "characterDescription", label: "描述", width: 120 },
+                { prop: "characterDescription", label: "描述", width: 120,overflow:true },
                 { prop: "action", label: "操作", width: 120,
                     arr:[
                         {name:"修改",type:"edit",id:1},
@@ -54,6 +65,10 @@ export default {
                     ] 
                 },
             ],
+            tablePage: {
+                pageNo:1,
+                pageSize: 20,
+            },
             tableSettings: {
                 isLoading: false,
                 isPagination: true,
@@ -70,9 +85,17 @@ export default {
     },
     methods: {
         ...mapActions("team",["getList","deleteRow"]),
+        handlePageSize(pageSize) {
+            this.tablePage.pageSize = pageSize;
+            this.getTypeList();
+        },
+        handleCurrentPage(pageNo) {
+            this.tablePage.pageNo = pageNo;
+            this.getTypeList();
+        },
         // 删除表格数据
         handleRowDelete(row) {
-             this.$confirm(`是否删除${row.title}？`, '提示', {
+             this.$confirm(`是否删除${row.name}？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -99,7 +122,7 @@ export default {
         // 获取表格
         getTypeList() {
             this.tableSettings.isLoading = true;
-            this.getList()
+            this.getList(this.tablePage)
             .then(
                 res=>{
                     this.tableSettings.isLoading = false;

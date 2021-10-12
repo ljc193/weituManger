@@ -19,8 +19,18 @@
           :label="item.label"
           :min-width="item.width"
           :fixed="item.fixed"
+          :show-overflow-tooltip = "item.overflow"
           align="center"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+            <div  v-if="item.type == 'slot'">
+              <slot :name = "item.prop" :row = "scope.row" />
+            </div>
+            <span  v-else>
+              {{ scope.row[item.prop] }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-else
           :key="item.prop"
@@ -55,7 +65,7 @@
       @size-change="e=>handleClick('pageSize',e)"
       @current-change="e=>handleClick('currentPage',e)"
       :current-page="currentPage"
-      :page-sizes="[20, 50, 100, 200]"
+      :page-sizes="[5,20, 50, 100, 200]"
       :page-size="20"
       layout="total, sizes, prev, pager, next, jumper"
       :total="settings.total"
@@ -155,5 +165,6 @@ export default {
         background: #f0f2f7e3;
       }
     }
+    
   }
 </style>

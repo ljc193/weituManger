@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="编辑首页"
+        title="编辑新闻"
         :visible.sync="isShow"
         class = "app-dialog"
         :close-on-press-escape = "false"
@@ -21,6 +21,8 @@
                         type="textarea"
                         :autosize="{ minRows: 2, maxRows: 6}"
                         placeholder="请输入内容"
+                        maxlength="200"
+                        show-word-limit
                         v-model="ruleForm.contentCn">
                     </el-input>
                 </el-form-item>
@@ -39,7 +41,7 @@
                         inactive-color="#ff4949">
                     </el-switch>
                 </el-form-item>
-                <el-form-item label="发布时间" prop="issueTime">
+                <el-form-item label="新闻时间" prop="issueTime">
                     <el-date-picker
                         v-model="ruleForm.issueTime"
                         type="date"
@@ -156,7 +158,11 @@ export default {
             if(this.isEdit) return;
             this.$nextTick(()=>{
                 this.$refs[formName].resetFields();
-                this.$refs.app_upload.backImgList = []
+                this.$refs.app_upload.backImgList = [];
+                for(var i in this.ruleForm) {
+                    this.ruleForm[i] = "";
+                }
+                this.ruleForm.issue = false;
             })
         }
     }

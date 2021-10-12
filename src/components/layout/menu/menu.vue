@@ -11,6 +11,9 @@
         >
             <sidebar-item v-for="menu in menuList" :key="menu.path" :item="menu" />
         </el-menu>
+        <div class = "app-menu-logo">
+            <img src="/static/img/logo.png" alt="">
+        </div>
     </div>
 </template>
 <script>
@@ -35,6 +38,21 @@ export default {
     .app-menu {
         width: 100%;
         height: 100%;
+        background: #304156;
+        box-sizing: border-box;
+        padding-top: 100px;
+        position: relative;
+        &-logo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            img {
+                width: 100%;
+            }
+        }
         /deep/.el-menu {
             width: 100%;
             height: 100%;

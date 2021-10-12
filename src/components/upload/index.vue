@@ -57,6 +57,9 @@ export default {
                 let data = response.data;
                 this.backImgList = this.backImgList.concat(data);
                 this.$emit('imgChange',this.backImgList)
+            }else {
+                this.backImgList = [];
+                this.$message.error("上传失败！")
             }
         },
     }

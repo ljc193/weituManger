@@ -26,7 +26,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="项目类型" prop="type">
+                <!-- <el-form-item label="项目类型" prop="type">
                     <el-select v-model="ruleForm.type" placeholder="请选择" size = "small">
                         <el-option
                             v-for="item in statusList"
@@ -35,7 +35,7 @@
                             :value="item.id">
                         </el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="封面" prop="cover">
                     <upload ref = "app_upload" @imgChange = "handleImgChange" />
                 </el-form-item>
@@ -79,7 +79,7 @@ export default {
                 itemCategoryId:"",
                 sort:"",
                 cover:"",
-                type:"", // 类型 1 图片 2 视频 3 图片集
+                type:"1", // 类型 1 图片 2 视频 3 图片集
                 id:""
             },
             typeList:[],
@@ -157,7 +157,11 @@ export default {
             if(this.isEdit) return;
             this.$nextTick(()=>{
                 this.$refs[formName].resetFields();
-                this.$refs.app_upload.backImgList = []
+                this.$refs.app_upload.backImgList = [];
+                for(var i in this.ruleForm) {
+                    this.ruleForm[i] = "";
+                }
+                this.ruleForm.type = "1"
             })
         }
     }

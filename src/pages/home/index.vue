@@ -3,7 +3,7 @@
         <table-operation
             @operation = "handleOperation"
             @search = "getTypeList"
-        >
+        > 
         </table-operation>
         <div class = "mt20">
             <app-table
@@ -12,7 +12,16 @@
                 :settings="tableSettings" 
                 @delete = "handleRowDelete"
                 @edit = "handleEdit"
+                @pageSize = "handlePageSize"
+                @currentPage = "handleCurrentPage"
             >
+                <template v-slot:imgAddress="{row}">
+                    <el-image 
+                        style="width: 50px; height: 50px"
+                        :src="imgShow + row.imgAddress" 
+                        :preview-src-list="[imgShow + row.imgAddress]">
+                    </el-image>
+                </template>
             </app-table>
         </div>
         <!-- 新增 && 修改 -->
@@ -30,6 +39,7 @@ import tableOperation from "@/components/tableOperation"
 import appTable from "@/components/appTable"
 import addType from "./components/add-type.vue"
 import { mapActions } from "vuex" 
+import { imgShow } from "@/assets/utils/config"
 export default {
     components: {
         tableOperation,
@@ -39,12 +49,13 @@ export default {
     data() {
         return {
             tableData: [],
+            imgShow,
             isEdit: false,
             tableHeader: [
                 { type: "selection", width: 50, fixed: true },
                 { prop: "sort", label: "排序", width: 50 },
                 { prop: "title", label: "项目名", width: 120 },
-                { prop: "imgAddress", label: "图片", width: 120 },
+                { prop: "imgAddress", label: "图片", width: 120,type:"slot" },
                 { prop: "address", label: "地点", width: 120 },
                 { prop: "date", label: "时间", width: 120 },
                 { prop: "action", label: "操作", width: 120,
@@ -62,6 +73,10 @@ export default {
                 total: 0,
                 height:null
             },
+            tablePage: {
+                pageNo:1,
+                pageSize: 20,
+            },
             addDialog: false,
         }
     },
@@ -70,6 +85,14 @@ export default {
     },
     methods: {
         ...mapActions("home",["getList","deleteRow"]),
+        handlePageSize(pageSize) {
+            this.tablePage.pageSize = pageSize;
+            this.getTypeList();
+        },
+        handleCurrentPage(pageNo) {
+            this.tablePage.pageNo = pageNo;
+            this.getTypeList();
+        },
         // 删除表格数据
         handleRowDelete(row) {
              this.$confirm(`是否删除${row.title}？`, '提示', {
@@ -99,7 +122,7 @@ export default {
         // 获取表格
         getTypeList() {
             this.tableSettings.isLoading = true;
-            this.getList()
+            this.getList(this.tablePage)
             .then(
                 res=>{
                     this.tableSettings.isLoading = false;

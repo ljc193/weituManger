@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="编辑首页"
+        title="编辑成员"
         :visible.sync="isShow"
         class = "app-dialog"
         :close-on-press-escape = "false"
@@ -83,9 +83,6 @@ export default {
                 position: [
                     { required: true, message: '请输入人物职位', trigger: 'blur' },
                 ],
-                characterDescription: [
-                    { required: true, message: '请输入人物描述', trigger: 'blur' },
-                ],
                 
             }
         }
@@ -129,7 +126,10 @@ export default {
             if(this.isEdit) return;
             this.$nextTick(()=>{
                 this.$refs[formName].resetFields();
-                this.$refs.app_upload.backImgList = []
+                this.$refs.app_upload.backImgList = [];
+                for(var i in this.ruleForm) {
+                    this.ruleForm[i] = "";
+                }
             })
         }
     }
