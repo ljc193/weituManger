@@ -63,6 +63,7 @@ export default {
             this.$emit("operation","1")
         },
         resetQuery() {
+            this.form.keyword = "";
             this.$emit("search","")
         },
         handleQuery() {

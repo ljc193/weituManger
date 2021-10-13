@@ -3,24 +3,25 @@
     <el-dialog title="修改密码" width="40%" :visible.sync="cgpwdVisible" :close-on-click-modal="false" :modal-append-to-body='false'>
         <el-form :model="dataForm" label-width="100px" :rules="dataFormRules" ref="dataForm" :size="size"
             label-position="right">
-            <el-form-item label="旧密码" prop="oldPassWord">
-                <el-input v-model="dataForm.oldPassWord" type="password" auto-complete="off"></el-input>
+            <el-form-item label="旧密码" prop="plainPassword">
+                <el-input v-model="dataForm.plainPassword" type="password" auto-complete="off" clearable></el-input>
             </el-form-item>
-            <el-form-item label="新密码" prop="passWord">
-                <el-input v-model="dataForm.passWord" type="password" auto-complete="off"></el-input>
+            <el-form-item label="新密码" prop="pwd">
+                <el-input v-model="dataForm.pwd" type="password" auto-complete="off" clearable></el-input>
             </el-form-item>
-             <el-form-item label="重复新密码" prop="rePassWord">
-                <el-input v-model="dataForm.rePassWord" type="password" auto-complete="off"></el-input>
+             <el-form-item label="重复新密码" prop="repwd">
+                <el-input v-model="dataForm.repwd" type="password" auto-complete="off" clearable></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" style="margin-top: 5px;">
-            <el-button  @click.native="cgpwdVisible = false">取消</el-button>
-            <el-button  type="primary" @click.native="submitForm" :loading="editLoading">确认修改</el-button>
+            <el-button  @click.native="cgpwdVisible = false" size = "small">取消</el-button>
+            <el-button  type="primary" @click.native="submitForm" :loading="editLoading" size = "small">确认修改</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
+import { mapActions } from "vuex" 
 export default {
   data() {
     return {
@@ -29,19 +30,19 @@ export default {
       editLoading: false,   //载入图标
       //初始化数据
       dataForm: {
-                oldPassWord: '',
-                passWord: '',
-                rePassWord:''
+                plainPassword: '',
+                pwd: '',
+                repwd:''
       },
       //设置属性
       dataFormRules: {
-                oldPassWord: [
+                plainPassword: [
                     { required: true, message: '请输入旧密码', trigger: 'blur' }
         ],
-                passWord: [
+                pwd: [
                     { required: true, message: '请输入新密码', trigger: 'blur' }
         ],
-           rePassWord: [
+           repwd: [
                     { required: true, message: '请再次输入新密码', trigger: 'blur' }
         ]
       },
@@ -50,6 +51,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions("users",["editPsd"]),
   　// 设置可见性
     setCgpwdVisible: function (cgpwdVisible) {
       this.cgpwdVisible = cgpwdVisible
@@ -60,8 +62,19 @@ export default {
         //this.$refs.XXX 获取ref绑定的节点
         this.$refs.dataForm.validate((valid) => {
           if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-             
+            if(this.dataForm.repwd != this.dataForm.pwd) {
+                return this.$message.warning("两次输入密码不一致")
+            }
+            this.$confirm('确认修改密码吗？修改成功后需要重新登录', '提示', {}).then(() => {
+              this.editPsd(this.dataForm)
+              .then(
+                res=>{
+                  if(res.code == "1") {
+                    this.$message.success("修改成功")
+                    this.$router.push({path:"/login"})
+                  }
+                }
+              )
             })
           }
         })

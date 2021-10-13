@@ -2,7 +2,7 @@
     <div class = "app-container app-home">
         <table-operation
             @operation = "handleOperation"
-            @search = "getTypeList"
+            @search = "handleSearch"
         >
         </table-operation>
         <div class = "mt20">
@@ -14,6 +14,7 @@
                 @edit = "handleEdit"
                 @pageSize = "handlePageSize"
                 @currentPage = "handleCurrentPage"
+                @select = "handleSelect"
             >
                 <template v-slot:imgAddress="{row}">
                     <el-image 
@@ -52,7 +53,6 @@ export default {
             imgShow,
             isEdit: false,
             tableHeader: [
-                { type: "selection", width: 50, fixed: true },
                 { prop: "sort", label: "排序", width: 50 },
                 { prop: "name", label: "人物名称", width: 120 },
                 { prop: "imgAddress", label: "人物头像", width: 120,type :"slot" },
@@ -68,11 +68,13 @@ export default {
             tablePage: {
                 pageNo:1,
                 pageSize: 20,
+                name:""
             },
+            id:"",
             tableSettings: {
                 isLoading: false,
                 isPagination: true,
-                isSelection: false,
+                isSelection: true,
                 currentPage: 1,
                 total: 0,
                 height:null
@@ -85,6 +87,17 @@ export default {
     },
     methods: {
         ...mapActions("team",["getList","deleteRow"]),
+        handleSearch(keyword) {
+            this.tablePage.name = keyword;
+            this.getTypeList();
+        },
+        handleSelect(e) {
+            if(!e.length) {
+                this.ids = "";
+                return 
+            }
+            this.ids = e.map(i=>i.id).toString();
+        },
         handlePageSize(pageSize) {
             this.tablePage.pageSize = pageSize;
             this.getTypeList();
@@ -148,8 +161,9 @@ export default {
             if(type == 1) {
                 this.addDialog = true;
                 this.isEdit = false;
-            }else if(type == 2) {
-
+            }else if(type == 3) { // 批量删除
+                if(!this.ids) return this.$message.warning("请选择要删除的选项！")
+                this.handleRowDelete({ id: this.ids,name:"所选项" })
             }
         }
     }
