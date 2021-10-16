@@ -1,33 +1,61 @@
+/*
+ * @Description: 
+ * @Version: 1.0
+ * @Autor: jinchuan.lee
+ * @Date: 2021-10-08 14:21:09
+ * @LastEditors: jinchuan.lee
+ * @LastEditTime: 2021-10-15 16:02:24
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 import menuList from '@/assets/utils/menuList'
-import layout from "@/pages/layout"
+import layout from "@/pages/layout/layout"
 import store from '../store/index.js'
-const _import = require("./_import_" + process.env.NODE_ENV);
 Vue.use(Router)
 
 let routeList = [];
-for(var i=0;i<menuList.length;i++) {
-  addRouter(menuList[i])
-}
-function addRouter(data){
-  if(data && data.children && data.children.length){
-    for (var i=0;i<data.children.length;i++) {
-      addRouter(data.children[i]);
-    }
-  }else{
-    //赋值
-    routeList.push({
-      path: data.path.substring(1),
-      name: data.path.replace(data.path[0],data.path[0].toUpperCase()),
-      component: _import(data.url),
-      meta: {
-        title: data.path.substring(1),
-        label: data.title
+const components = require.context('@/pages', true, /\.vue$/);
+let datas = []
+if (menuList && menuList.length) {
+  menuList.forEach(item => {
+    if (item.children.length == 0) {
+      if (datas.indexOf(item) == -1) {
+        datas.push({
+          name: item.path.substring(1),
+          path: item.path,
+          title: item.title
+        });
       }
-    });
-  }
-}
+    } else {
+      item.children.forEach(i => {
+        if (datas.indexOf(i) == -1) {
+          datas.push({
+            name: i.path.substring(1),
+            path: i.path,
+            title: i.title
+          });
+        }
+      })
+    }
+  })
+};
+components.keys().forEach(n => {
+  let fileName = n.slice(n.lastIndexOf('/')).replace(/\.vue$/, "");
+  let view = "pages" + n.slice(1);
+  datas.forEach((item, index) => {
+    if (item.path == fileName) {
+      routeList.push({
+        name: item.name,
+        meta:{
+          title: item.title
+        },
+        path: item.path,
+        component: resolve => require(['@/' + view], resolve),
+      })
+    }
+  })
+});
+
 const router = new Router({
   mode:"history",
   routes: [
@@ -37,10 +65,10 @@ const router = new Router({
       children: routeList
     },
     {
-      path:"/login",
-      name:"Login",
-      component: _import("login/login")
-    }
+			path: '/login',
+      name:"login",
+			component: resolve => require(['@/pages/login/login'], resolve)
+		},
 
   ]
 })
@@ -49,7 +77,7 @@ router.beforeEach((to,from,next)=>{
 	if(to.path != '/login'){
 		if(_this.$getByKey('token')){
 			if (to.matched.length ===0) {  //如果未匹配到路由
-				form.name ? next() : next('/error');   //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
+				from.name ? next() : next('/error');   //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
 			} else {
         store.commit("navigation/GET_TABLIST",to)
 				next();    //如果匹配到正确跳转

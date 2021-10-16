@@ -1,8 +1,15 @@
+/*
+ * @Description: 
+ * @Version: 1.0
+ * @Autor: jinchuan.lee
+ * @Date: 2021-10-08 14:21:09
+ * @LastEditors: jinchuan.lee
+ * @LastEditTime: 2021-10-15 15:40:34
+ */
 let menuList = [
 	{
         "path": "/home",
 		"title": "首页",
-		"url": 'home/index',
 		"children": []
     },
     // {
@@ -12,7 +19,6 @@ let menuList = [
 	// 	    {
 	// 			"path": "/baseMsg",
 	// 			"title": "导航显示",
-	// 			"url": 'baseMsg/index'
 	// 	    },
 	// 	]
     // },
@@ -23,24 +29,20 @@ let menuList = [
 		    {
 				"path": "/projectType",
 				"title": "类别设置",
-				"url": 'project/projectType/index'
 		    },{
 				"path": "/projectItem",
 				"title": "上传项目",
-				"url": 'project/projectItem/index'
 		    }
 		]
     },
 	{
 		"path": "/news",
 		"title": "新闻管理",
-		"url": 'news/index',
 		"children": []
     },
 	{
 		"path": "/team",
 		"title": "团队管理",
-		"url": 'team/index',
 		"children": []
     },
 	{
@@ -50,18 +52,15 @@ let menuList = [
 		    {
 				"path": "/contactBaseInfo",
 				"title": "页面设置",
-				"url": 'contact/contactBaseInfo/index'
 		    },{
-				"path": "/positionManagement",
+				"path": "/position",
 				"title": "职位管理",
-				"url": 'contact/position/index'
 		    }
 		]
     },
 	{
 		"path": "/about",
 		"title": "关于我们",
-		"url": 'about/index',
 		"children": []
     },
 	

@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Version: 1.0
+ * @Autor: jinchuan.lee
+ * @Date: 2021-10-08 14:21:09
+ * @LastEditors: jinchuan.lee
+ * @LastEditTime: 2021-10-15 16:05:05
+-->
 <template>
     <div class = "app-nav">
         <el-tabs 
@@ -9,9 +17,9 @@
             <el-tab-pane
                 v-for="item in tabs"
                 :key="item.name"
-                :label="item.meta.label"
+                :label="item.meta.title"
                 :name="item.name"
-                :closable="item.name !== '/home'"
+                :closable="item.name !== 'home'"
             >
             </el-tab-pane>
         </el-tabs>
@@ -41,7 +49,7 @@ export default {
             return
           }
            this.editableTabsValue = val.name;
-           this.$router.push('.'+val.name)
+           this.$router.push('./'+val.name)
         },
         removeTab(targetName) {
           let length = this.tabs.length - 1,index=0;

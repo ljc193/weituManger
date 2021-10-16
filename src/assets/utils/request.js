@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 1.0
+ * @Autor: jinchuan.lee
+ * @Date: 2021-10-08 14:21:09
+ * @LastEditors: jinchuan.lee
+ * @LastEditTime: 2021-10-15 11:11:25
+ */
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs'
@@ -10,7 +18,6 @@ if (process.env.NODE_ENV === "development") {
 }else {
 	baseUrls = baseUrl
 }
-
 // 创建axios实例
 const request = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分

@@ -91,7 +91,7 @@ export default {
     created () {
         this.getTypeList();
     },
-    methods: {
+    methods: { 
         ...mapActions("news",["getList","deleteRow"]),
         handleSearch(keyword) {
             this.tablePage.name = keyword;
